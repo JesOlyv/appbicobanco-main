@@ -1,19 +1,20 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet,Image } from 'react-native';
 import { DatabaseConnection } from './conexao';
 
 const db = DatabaseConnection.getConnection();
 const Welcome = ({ handleNavigation }) => {
   return (
+    
     <View style={styles.container}>
       <View style={styles.containerLogo}>
         <Text style={styles.welcomeText}>Bem-vindo!</Text>
       </View>
       <View style={styles.containerForm}>
         <Text style={styles.title}>Régis Construções</Text>
-        <Text style={styles.text}>Seu catálogo de OBRAS</Text>
+        <Text style={styles.text}>Conheça nossa equipe!</Text>
         <Button
-          title="Login"
+          title="Login! Cadastre -se "
           onPress={() => handleNavigation('LoginCadastro')}
         />
            <Button
@@ -21,7 +22,7 @@ const Welcome = ({ handleNavigation }) => {
          
         />
         <Button
-          title="Perfil"
+          title="Equipe"
           onPress={() => handleNavigation('Perfil')}
         />
         
@@ -57,13 +58,14 @@ const styles = StyleSheet.create({
     color: '#333333',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginTop: 28,
     marginBottom: 12,
   },
   text: {
-    color: '#a1a1a1',
+    color: '#00008B',
+    fontSize: 28,
   },
 });
 

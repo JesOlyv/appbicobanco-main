@@ -1,30 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { DatabaseConnection } from './conexao';
 
 const db = DatabaseConnection.getConnection();
+
 const Perfil = ({ handleNavigation }) => {
-  const profiles = ['Pedreiro', 'Gesseiro', 'Ladrilheiro', 'Pintor', 'Armador'];
+  const profiles = [
+    { nome: 'Pedreiro Roger', experiencia: 'Experiência: 5 anos, me siga no instagram', instagram: '@rogerobr' },
+    { nome: 'Gesseiro Otto', experiencia: 'Experiência: 3 anos , me siga no instagram', instagram: '@ottoob' },
+    { nome: 'Ladrilheiro Lucio', experiencia: 'Experiência: 2 anos , me siga no instagram', instagram: '@obrlucio' },
+    { nome: 'Pintor      Hugo', experiencia: 'Experiência: 4 anos , me siga no instagram', instagram: '@hugo_ob' },
+    { nome: 'Armador Pedro', experiencia: 'Experiência: 6 anos , me siga no instagram', instagram: '@dro_br' },
+  ];
+
+  const [filtro, setFiltro] = useState('Todos');
 
   const handleIrParaWelcome = () => {
     handleNavigation('Welcome');
   };
 
+  const handleFiltro = (filtroSelecionado) => {
+    setFiltro(filtroSelecionado);
+  };
+
+  const perfisFiltrados = filtro === 'Todos' ? profiles : profiles.filter(profile => profile.nome.includes(filtro));
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Perfis dos Profissionais</Text>
+      <Text style={styles.title}>Nossos Profissionais</Text>
+      <View style={styles.filterContainer}>
+        <Button title="Todos" onPress={() => handleFiltro('Todos')} />
+        <Button title="Pedreiros" onPress={() => handleFiltro('Pedreiro')} />
+        <Button title="Gesseiros" onPress={() => handleFiltro('Gesseiro')} />
+        <Button title="Ladrilheiros" onPress={() => handleFiltro('Ladrilheiro')} />
+        <Button title="Pintores" onPress={() => handleFiltro('Pintor')} />
+        <Button title="Armadores" onPress={() => handleFiltro('Armador')} />
+      </View>
       <View style={styles.profilesContainer}>
-        {profiles.map((profile, index) => (
+        {perfisFiltrados.map((profile, index) => (
           <View key={index} style={styles.profileItem}>
-            <Text style={styles.profileText}>{profile}</Text>
+            <Text style={styles.profileText}>{profile.nome}</Text>
+            <Text style={styles.profileExperience}>{profile.experiencia}</Text>
+            <Text style={styles.profileInstagram}>{profile.instagram}</Text>
           </View>
         ))}
       </View>
       <View style={styles.contactContainer}>
-        <Text style={styles.contactText}>Para nos contratar, envie um e-mail para:</Text>
+        <Text style={styles.contactText}>Siga-nos no Instagram: </Text>
+        <Text style={styles.emailText}>@constregis</Text>
+        <Text style={styles.contactText}>Para nos contratar: nos envie um e-mail: </Text>
         <Text style={styles.emailText}>constregis@gmail.com</Text>
+        <Text style={styles.contactText}>Clientes cadastrados ganham 5% de desconto,no serviço contratado! FAÇA SEU CADASTRO!</Text>
       </View>
-      <Button title="Inicio" onPress={handleIrParaWelcome} />
+      <Button title="Início" onPress={handleIrParaWelcome} />
     </View>
   );
 };
@@ -32,7 +60,7 @@ const Perfil = ({ handleNavigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFDEAD', // Fundo amarelo claro
+    backgroundColor: '#87CEFA', // Fundo amarelo claro
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -42,15 +70,19 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: '#000000', // Texto preto
   },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
   profilesContainer: {
-    marginTop: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
   profileItem: {
     width: 100,
-    height: 100,
+    height: 120,
     backgroundColor: '#ccc',
     margin: 10,
     justifyContent: 'center',
@@ -63,6 +95,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#000000', // Texto preto
   },
+  profileExperience: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: '#000000', // Texto preto
+  },
+  profileInstagram: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: '#00008B', // Texto preto
+  },
   contactContainer: {
     marginTop: 20,
     alignItems: 'center',
@@ -70,12 +112,7 @@ const styles = StyleSheet.create({
   contactText: {
     fontSize: 16,
     marginBottom: 5,
-    color: '#000000', // Texto preto
-  },
-  emailText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000000', // Texto preto
+    color: '#00008B', // Texto preto
   },
 });
 

@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { View, ImageBackground,Image, TextInput, Button, StyleSheet, Text, Alert } from 'react-native';
+import { View, ImageBackground, Image, TextInput, Button, StyleSheet, Text, Alert } from 'react-native';
 
 import { DatabaseConnection } from './conexao.js';
 
 const db = DatabaseConnection.getConnection();
 
-
 const LoginCadastro = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState('');
-
 
   //CRIA A TABELA DE USUARIOS
   db.transaction(tx => {
@@ -38,80 +36,77 @@ const LoginCadastro = () => {
     console.log('Registering password:', password);
   };
 
-    //FUNCAO QUE ADICIONA NO BANCO AS INFORMAÇÕES DE CADASTRO
-    const adduser = () => {
-      console.log(username, password);
+  //FUNCAO QUE ADICIONA NO BANCO AS INFORMAÇÕES DE CADASTRO
+  const adduser = () => {
+    console.log(username, password);
 
-      if (!username) {
-        alert('Por favor preencha o nome !');  //VERIFICA SE O NOME NAO ESTA EM BRANCO
-        return;
-      }
-      if (!password) {  //VERIFICA SE A SENHA NAO ESTA EM BRANCO
-        alert('Por favor preencha a senha !');
-        return;
-      }
-      // ABAIXO É A INSERÇÃO DE DADOS NO BANCO
-      db.transaction(function (tx) {
-        tx.executeSql(
-          'INSERT INTO users (name, password) VALUES (?,?)',
-          [username, password],
-          (tx, results) => {
-            console.log('Results', results.rowsAffected);
-            if (results.rowsAffected > 0) {
-              alert('Usuário Registrado com Sucesso !!!'),
-                [
-                  navigation.navigate('Login'),
-                ],
-                { cancelable: false };
-            } else alert('Erro ao tentar Registrar o Usuário !!!');
-          }
+    if (!username) {
+      alert('Por favor preencha o nome !'); //VERIFICA SE O NOME NAO ESTA EM BRANCO
+      return;
+    }
+    if (!password) {
+      alert('Por favor preencha a senha !');
+      return;
+    }
+    // ABAIXO É A INSERÇÃO DE DADOS NO BANCO
+    db.transaction(function (tx) {
+      tx.executeSql(
+        'INSERT INTO users (name, password) VALUES (?,?)',
+        [username, password],
+        (tx, results) => {
+          console.log('Results', results.rowsAffected);
+          if (results.rowsAffected > 0) {
+            alert('Usuário Registrado com Sucesso !!!'),
+              [navigation.navigate('Login')],
+              { cancelable: false };
+          } else alert('Erro ao tentar Registrar o Usuário !!!');
+        }
       );
     });
   };
 
-    // FUNCAO PARA VALIDAR E LOGAR
+  // FUNCAO PARA VALIDAR E LOGAR
 
-    const entrar = () => {
-      /* Ir para a tela principal sem opção de voltar
-      navigation.reset({
-          index:0,
-          routes: [{name: "Principal"}]
-      })
-      */
-      if (!username) {
-        alert('Por favor, entre com email e senha.!');
-        return;
-      }
-      if (!password) {
-        alert('Por favor, entre com email e senha.!');
-        return;
-      }
-      db.transaction((tx) => {
-        tx.executeSql(
-          'SELECT * FROM users where name = ?',
-          [username],
-          (tx, results) => {
-            var len = results.rows.length;
-            console.log('len', len);
-            if (len > 0) {
-              const pass=results.rows.item(0).password;
-              console.log(pass)
-              if(username == results.rows.item(0).name & password == results.rows.item(0).password){
-                console.log(results.rows.item(0).username);
-                console.log(results.rows.item(0).password);
-                alert('usuario logado!!')
-              }else{
-                alert('Usuário ou senha inválido!');
-              }
-            } else {
-              alert('Usuário não cadastrado!');
-            }
-          }
-        );
-      });
+  const entrar = () => {
+    /* Ir para a tela principal sem opção de voltar
+    navigation.reset({
+        index:0,
+        routes: [{name: "Principal"}]
+    })
+    */
+    if (!username) {
+      alert('Por favor, entre com email e senha.!');
+      return;
     }
+    if (!password) {
+      alert('Por favor, entre com email e senha.!');
+      return;
+    }
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM users where name = ?',
+        [username],
+        (tx, results) => {
+          var len = results.rows.length;
+          console.log('len', len);
+          if (len > 0) {
+            const pass = results.rows.item(0).password;
+            console.log(pass);
+            if (username == results.rows.item(0).name && password == results.rows.item(0).password) {
+              console.log(results.rows.item(0).username);
+              console.log(results.rows.item(0).password);
+              alert('usuario logado!!');
+            } else {
+              alert('Usuário ou senha inválido!');
+            }
+          } else {
+            alert('Usuário não cadastrado!');
+          }
+        }
+      );
+    });
+  };
 
-  
   return (
     <View style={styles.container}>
       <TextInput
@@ -135,7 +130,6 @@ const LoginCadastro = () => {
       <Text style={styles.textLink} onPress={() => setIsRegistering(!isRegistering)}>
         {isRegistering ? ' Voltar' : 'Cadastre-se!'}
       </Text>
-     
     </View>
   );
 };
@@ -146,15 +140,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: '#87CEFA', // Alteração da cor de fundo para amarelo claro
   },
   imagemfundo: {
     flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-    alignItems: "center",
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
     height: '100%',
-},
+  },
   input: {
     width: '100%',
     height: 40,
